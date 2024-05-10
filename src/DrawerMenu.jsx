@@ -3,6 +3,7 @@ import SearchForm from './SearchForm';
 
 const DrawerMenu = ({ isOpen, toggleMenu, onSearchLocation }) => {
   const [city, setCity] = useState('');
+  const [lastSearches, setLastSearches] = useState([]);
 
   const handleHideMenu = () => {
     toggleMenu(); // Llama a la función de toggle para cerrar el menú
@@ -10,7 +11,19 @@ const DrawerMenu = ({ isOpen, toggleMenu, onSearchLocation }) => {
 
   const handleCitySearch = (e) => {
     e.preventDefault();
-    onSearchLocation(city.trim());
+    const trimmedCity = city.trim();
+    onSearchLocation(trimmedCity);
+    handleHideMenu();
+
+    // Añadir la búsqueda actual a la lista de últimas búsquedas
+    if (trimmedCity && !lastSearches.includes(trimmedCity)) {
+      setLastSearches([trimmedCity, ...lastSearches.slice(0, 2)]);
+    }
+  };
+
+  const handleRecentSearch = (recentCity) => {
+    // Llamar a la función de búsqueda con la ciudad seleccionada
+    onSearchLocation(recentCity);
     handleHideMenu();
   };
 
@@ -31,7 +44,21 @@ const DrawerMenu = ({ isOpen, toggleMenu, onSearchLocation }) => {
         setCity={setCity}
         handleCitySearch={handleCitySearch}
       />
-      
+
+      {/* Botones de las últimas búsquedas */}
+      <div className="mt-4 flex flex-col">
+        {lastSearches.map((search, index) => (
+          <button
+            key={index}
+            className="my-2 ml-6 border border-gray-300 text-start text-sm focus:ring-blue-500 focus:border-blue-500 block w-3/4 pl-10 pr-2.5 py-2.5 dark:border-gray-500 dark:bg-transparent dark:text-white"
+          
+            onClick={() => handleRecentSearch(search)}
+          >
+            {search}
+          </button>
+        ))}
+      </div>
+
       {/* Más contenido del menú */}
     </div>
   );

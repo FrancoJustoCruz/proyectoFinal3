@@ -12,7 +12,11 @@ export default {
         'botonBusqueda':'#3C47E9',
         'searchPlaces':'#6E707A',
         'barraHumedad':'#E7E7EB',
-        'humedad':'#FFEC65'
+        'humedad':'#FFEC65',
+        'farenheit':'#585676',
+        'celsius':'#110E3C'
+        
+
         
         
         

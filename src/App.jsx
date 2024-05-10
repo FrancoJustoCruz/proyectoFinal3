@@ -20,7 +20,7 @@ import snow from './assets/weather-app-master/Snow.png'
 import hail from './assets/weather-app-master/Hail.png'
 
 function App() {
-  // redux state
+ 
   const {
     citySearchLoading,
     citySearchData,
@@ -62,36 +62,36 @@ function App() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // main loadings state
+  
   const [loadings, setLoadings] = useState(true);
 
   const handleToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // check if any of redux loading state is still true
+  
   const allLoadings = [citySearchLoading, forecastLoading];
   useEffect(() => {
     const isAnyChildLoading = allLoadings.some((state) => state);
     setLoadings(isAnyChildLoading);
   }, [allLoadings]);
 
-  // city state
+ 
   const [city, setCity] = useState('Karachi');
 
-  // unit state
+  
   const [unit, setUnit] = useState('metric'); // metric = C and imperial = F
 
-  // toggle unit
+  
   const toggleUnit = () => {
     setLoadings(true);
     setUnit(unit === 'metric' ? 'imperial' : 'metric');
   };
 
-  // dispatch
+ 
   const dispatch = useDispatch();
 
-  // fetch data
+  
   const fetchData = () => {
     dispatch(
       getCityData({
@@ -111,17 +111,17 @@ function App() {
     });
   };
 
-  // initial render
+ 
   useEffect(() => {
     fetchData();
   }, [unit, city]);
 
-  // handle city search
+
   const handleCitySearch = (city) => {
     setCity(city);
   };
 
-  // function to filter forecast data based on the time of the first object
+  
   const filterForecastByFirstObjTime = (forecastData) => {
     if (!forecastData) {
       return [];
@@ -134,7 +134,7 @@ function App() {
   const filteredForecast = filterForecastByFirstObjTime(forecastData?.list);
   const weatherIcon = citySearchData && citySearchData.data ? weatherIcons[citySearchData.data.weather[0].icon] : null;
 
-  // Function to get user's current location
+  
   const handleGetUserLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -150,7 +150,7 @@ function App() {
     <div className="font-Raleway relative h-screen">
       <DrawerMenu isOpen={isMenuOpen} toggleMenu={handleToggleMenu} onSearchLocation={handleCitySearch} />
       <div className="flex flex-col md:flex-row h-full">
-        {/* city search form */}
+        
         <section className="bg-Fondo bg-t w-full md:w-[459px] md:max-w-[459px] md:flex-grow relative flex z-10"
           style={{ minHeight: '810px', height: '100%' }}>
            <button className="w-10 h-10 bg-slate-500 absolute right-0 mr-6 mt-5 rounded-full flex items-center justify-center" onClick={handleGetUserLocation}>
@@ -165,10 +165,8 @@ function App() {
             Search for places
           </button>
          
-
-          {/* current weather details box */}
           <div className="absolute  top-60 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            {/* header */}
+           
             {loadings ? (
               <div className="flex justify-center">
                 <SphereSpinner loadings={loadings} color="#2fa5ed" size={20} />
@@ -185,7 +183,7 @@ function App() {
                       <>
                         {citySearchData && citySearchData.data ? (
                           <div >
-                            {/* details */}
+                            
                             
                               
                                 
@@ -224,8 +222,12 @@ function App() {
             )}
           </div>
         </section>
-        {/* extended forecastData */}
+        
         <section className="bg-otroFondo w-full md:px-32 md:w-[981px] md:min-w-[375px] md:flex-grow flex flex-col p-6 font-Raleway">
+        <div className="flex justify-end mb-4 md:flex hidden">
+    <button className="bg-barraHumedad text-celsius font-semibold py-1 px-2 rounded-full" onClick={() => setUnit('metric')}>°C</button>
+    <button className="bg-farenheit text-barraHumedad font-semibold py-1 px-2 rounded-full ml-2" onClick={() => setUnit('imperial')}>°F</button>
+  </div>
         {filteredForecast.length > 0 ? (
   <div className="grid grid-cols-2 md:grid-cols-5 justify-center place-items-center gap-2 md:gap-2 md:mx-0">
     {filteredForecast.map((data, index) => {
@@ -233,11 +235,11 @@ function App() {
       const day = date.toLocaleDateString('en-US', { weekday: 'short' });
       const month = date.toLocaleDateString('en-US', { month: 'short' });
       const dayOfMonth = date.getDate();
-      // Redondear la temperatura máxima y mínima
+     
       const maxTemp = Math.round(data.main.temp_max);
       const minTemp = Math.round(data.main.temp_min);
 
-      // Mapea el icono del clima al icono local correspondiente
+      
       const weatherIcons = {
         '01d': clearIcon,
         '01n': clearIcon,
@@ -270,12 +272,12 @@ function App() {
       const weatherIcon = weatherIcons[data.weather[0].icon] || null;
 
       return (
-        <div className="text-barraHumedad p-3 mt-20 justify-center bg-Fondo  w-[120px] h-[177px]" key={index}>
+        <div className="text-barraHumedad p-3 mt-10 justify-center bg-Fondo  w-[120px] h-[177px]" key={index}>
         <h5 className="text-md ">{day}, {dayOfMonth} {month}</h5>
-        <div className="flex items-center justify-center"> {/* Añadí la clase justify-center aquí */}
-          {weatherIcon && <img src={weatherIcon} alt="icon" className="w-20 h-16 mt-2" />} {/* Quité las clases de tamaño extra aquí */}
+        <div className="flex items-center justify-center"> 
+          {weatherIcon && <img src={weatherIcon} alt="icon" className="w-20 h-16 mt-2" />} 
         </div>
-        <div className="mt-8 flex  justify-between items-end "> {/* Añadí las clases flex-col, justify-between e items-end aquí */}
+        <div className="mt-8 flex  justify-between items-end "> 
           <h5 className="text-md">{maxTemp}&deg;</h5>
           <h5 className="text-md">{minTemp}&deg;</h5>
         </div>
